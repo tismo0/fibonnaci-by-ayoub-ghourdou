@@ -114,7 +114,7 @@
 </head>
 <body>
     <!-- Musique de fond -->
-    <audio id="background-music" loop autoplay>
+    <audio id="background-music" loop>
         <source src="Jannah.mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas le lecteur audio.
     </audio>
@@ -126,6 +126,9 @@
         <input type="number" id="fibo-input" min="1" max="100" placeholder="Ex : 10">
         <button id="start-button">Commencer/Bismillah</button>
         <div class="fibo-output"></div>
+
+        <!-- Bouton pour jouer/mettre en pause la musique -->
+        <button id="play-button">Play</button>
     </div>
 
     <!-- Effet de neige -->
@@ -143,92 +146,6 @@
         <div class="text" id="custom-text">Suite de Fibonnaci,renseignez vous à ce sujet svp</div>
     </div>
 
-    <script>
-        // Variables principales
-        const input = document.getElementById("fibo-input");
-        const button = document.getElementById("start-button");
-        const output = document.querySelector(".fibo-output");
-        const fiboSound = document.getElementById("fibo-sound");
-        const backgroundMusic = document.getElementById("background-music");
-        const canvas = document.getElementById("math-canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Ajuster la taille du canvas
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
-
-        // Génération de la suite de Fibonacci
-        function generateFibonacci(n) {
-            const fibo = [0, 1];
-            for (let i = 2; i < n; i++) {
-                fibo.push(fibo[i - 1] + fibo[i - 2]);
-            }
-            return fibo.slice(0, n);
-        }
-
-        // Affichage limité à 10 nombres par ligne
-        function displayFibonacci(fibo) {
-            output.innerHTML = "";
-            let index = 0;
-
-            const interval = setInterval(() => {
-                if (index < fibo.length) {
-                    const numberElement = document.createElement("div");
-                    numberElement.textContent = fibo[index];
-                    numberElement.className = "fibo-number";
-                    output.appendChild(numberElement);
-                    fiboSound.currentTime = 0;
-                    fiboSound.play();
-                    index++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 1000);
-        }
-
-        // Effet de "neige" avec formules mathématiques
-        function drawMathSnow() {
-            const symbols = ["∑", "∫", "π", "√", "θ", "∆", "ζ", "∞"];
-            const particles = Array.from({ length: 100 }, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                symbol: symbols[Math.floor(Math.random() * symbols.length)],
-                speed: Math.random() * 3 + 1,
-                fontSize: Math.random() * 20 + 15
-            }));
-
-            function update() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(particle => {
-                    ctx.font = `${particle.fontSize}px Arial`;
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-                    ctx.fillText(particle.symbol, particle.x, particle.y);
-                    particle.y += particle.speed;
-                    if (particle.y > canvas.height) particle.y = -50;
-                });
-                requestAnimationFrame(update);
-            }
-
-            update();
-        }
-
-        // Démarrage de l'effet de neige
-        drawMathSnow();
-
-        // Bouton pour démarrer la suite
-        button.addEventListener("click", () => {
-            const n = parseInt(input.value);
-            if (n > 0 && n <= 100) {
-                const fibo = generateFibonacci(n);
-                displayFibonacci(fibo);
-            } else {
-                alert("Veuillez entrer un nombre entre 1 et 100.");
-            }
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
