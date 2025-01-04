@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suite de Fibonacci</title>
     <style>
-        /* Styles généraux */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: white;
-            overflow-x: hidden; /* Empêche le défilement horizontal */
+            overflow-x: hidden;
         }
 
         h1, p {
@@ -47,11 +46,10 @@
             background: #f04d7d;
         }
 
-        /* Conteneur des nombres */
         .fibo-output {
             margin-top: 20px;
             display: flex;
-            flex-wrap: wrap; /* Les nombres se déplacent sur la ligne suivante */
+            flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
         }
@@ -67,7 +65,6 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 
-        /* Effet de neige */
         canvas {
             position: fixed;
             top: 0;
@@ -78,7 +75,6 @@
             pointer-events: none;
         }
 
-        /* Image et texte stylisé en haut à droite */
         .image-container {
             position: fixed;
             top: 10px;
@@ -88,20 +84,18 @@
         }
 
         .image-container img {
-            width: 80px; /* Ajuste la taille de l'image selon tes préférences */
+            width: 80px;
             border-radius: 50%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
         .image-container .text {
             font-size: 1rem;
-            color: #fff;
             margin-top: 5px;
             font-weight: bold;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Animation */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -113,39 +107,76 @@
     </style>
 </head>
 <body>
-    <!-- Musique de fond -->
-    <audio id="background-music" loop>
-        <source src="Jannah.mp3" type="audio/mpeg">
-        Votre navigateur ne supporte pas le lecteur audio.
-    </audio>
-
-    <!-- Conteneur principal -->
     <div class="container">
-        <h1 class="title">La Suite de Fibonacci</h1>
-        <p class="subtitle">Entrez le nombre de termes que vous souhaitez voir :</p>
+        <h1>La Suite de Fibonacci</h1>
+        <p>Entrez le nombre de termes que vous souhaitez voir :</p>
         <input type="number" id="fibo-input" min="1" max="100" placeholder="Ex : 10">
         <button id="start-button">Commencer/Bismillah</button>
         <div class="fibo-output"></div>
-
-        <!-- Bouton pour jouer/mettre en pause la musique -->
-        <button id="play-button">Play</button>
     </div>
 
-    <!-- Effet de neige -->
     <canvas id="math-canvas"></canvas>
 
-    <!-- Son joué pour chaque nombre -->
     <audio id="fibo-sound">
         <source src="10 SoundFX Transitions For Your Vidéos  Free (mp3cut.net).mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas le lecteur audio.
     </audio>
 
-    <!-- Image et texte stylisé en haut à droite -->
     <div class="image-container">
-        <img src="https://www.researchgate.net/publication/365483447/figure/fig1/AS:11431281103274997@1669644575693/Example-of-the-golden-spiral-based-on-the-Fibonacci-sequence-and-its-representation-in.ppm" alt="Image personnalisée" id="custom-image">
-        <div class="text" id="custom-text">Suite de Fibonnaci,renseignez vous à ce sujet svp</div>
+        <img src="https://www.researchgate.net/publication/365483447/figure/fig1/AS:11431281103274997@1669644575693/Example-of-the-golden-spiral-based-on-the-Fibonacci-sequence-and-its-representation-in.ppm" alt="Image personnalisée">
+        <div class="text">Suite de Fibonacci, renseignez-vous à ce sujet svp</div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        const input = document.getElementById("fibo-input");
+        const button = document.getElementById("start-button");
+        const output = document.querySelector(".fibo-output");
+        const fiboSound = document.getElementById("fibo-sound");
+        const canvas = document.getElementById("math-canvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        function generateFibonacci(n) {
+            const fibo = [0, 1];
+            for (let i = 2; i < n; i++) {
+                fibo.push(fibo[i - 1] + fibo[i - 2]);
+            }
+            return fibo.slice(0, n);
+        }
+
+        function displayFibonacci(fibo) {
+            output.innerHTML = "";
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < fibo.length) {
+                    const numberElement = document.createElement("div");
+                    numberElement.textContent = fibo[index];
+                    numberElement.className = "fibo-number";
+                    output.appendChild(numberElement);
+                    fiboSound.currentTime = 0;
+                    fiboSound.play();
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        button.addEventListener("click", () => {
+            const n = parseInt(input.value);
+            if (n > 0 && n <= 100) {
+                const fibo = generateFibonacci(n);
+                displayFibonacci(fibo);
+            } else {
+                alert("Veuillez entrer un nombre entre 1 et 100.");
+            }
+        });
+    </script>
 </body>
 </html>
